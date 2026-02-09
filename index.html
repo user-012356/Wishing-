@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ardhangini ji 💞🎀</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:"Georgia", serif;
+  background:radial-gradient(circle at top,#ff9a9e,#fad0c4);
+  overflow:hidden;
+}
+
+/* Scene */
+.scene{
+  display:none;
+  min-height:100vh;
+  width:100vw;
+  padding:40px;
+  text-align:center;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+}
+
+.scene.active{
+  display:flex;
+  animation:fadeIn 1.2s ease;
+}
+
+/* Quote */
+.quote{
+  font-size:2.8rem;
+  color:#7a0033;
+  max-width:900px;
+  line-height:1.4;
+  margin-bottom:50px;
+  animation:pulse 3s infinite;
+}
+
+/* Buttons */
+.controls button{
+  padding:12px 30px;
+  margin:0 15px;
+  font-size:1rem;
+  border:none;
+  border-radius:25px;
+  cursor:pointer;
+  background:linear-gradient(45deg,#ff416c,#ff4b2b);
+  color:white;
+  box-shadow:0 10px 25px rgba(0,0,0,0.25);
+}
+
+#muteBtn{
+  position:fixed;
+  top:20px;
+  right:20px;
+  padding:10px 18px;
+  border:none;
+  border-radius:20px;
+  cursor:pointer;
+  background:white;
+  font-size:0.9rem;
+  box-shadow:0 6px 15px rgba(0,0,0,0.2);
+  z-index:1000;
+}
+
+/* Proposal Buttons */
+#yesBtn, #noBtn{
+  padding:15px 35px;
+  font-size:1.2rem;
+  border:none;
+  border-radius:30px;
+  cursor:pointer;
+  margin:10px;
+}
+
+#yesBtn{
+  background:green;
+  color:white;
+}
+
+#noBtn{
+  background:red;
+  color:white;
+  position:absolute;
+}
+
+/* Hearts */
+.heart{
+  position:absolute;
+  width:18px;
+  height:18px;
+  background:red;
+  transform:rotate(45deg);
+  animation:float 6s linear infinite;
+  opacity:0.6;
+}
+.heart::before,.heart::after{
+  content:'';
+  width:18px;
+  height:18px;
+  background:red;
+  border-radius:50%;
+  position:absolute;
+}
+.heart::before{top:-9px;left:0;}
+.heart::after{left:-9px;top:0;}
+
+canvas{
+  position:fixed;
+  top:0;
+  left:0;
+  pointer-events:none;
+}
+
+@keyframes float{
+  from{transform:translateY(100vh) rotate(45deg);}
+  to{transform:translateY(-10vh) rotate(45deg);}
+}
+@keyframes fadeIn{
+  from{opacity:0;transform:scale(0.9);}
+  to{opacity:1;transform:scale(1);}
+}
+@keyframes pulse{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.05);}
+}
+</style>
+</head>
+
+<body>
+
+<button id="muteBtn">🔇 Unmute</button>
+<div id="player" style="display:none"></div>
+<canvas id="fireworks"></canvas>
+<div id="container"></div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+
+<script>
+let player;
+let muted=true;
+
+function onYouTubeIframeAPIReady(){
+  player=new YT.Player('player',{
+    videoId:'uH08H02VTiE',
+    playerVars:{autoplay:1,loop:1,playlist:'uH08H02VTiE',controls:0},
+    events:{onReady:e=>e.target.mute()}
+  });
+}
+
+document.getElementById("muteBtn").onclick=()=>{
+  if(muted){
+    player.unMute();
+    muteBtn.textContent="🔊 Mute";
+  }else{
+    player.mute();
+    muteBtn.textContent="🔇 Unmute";
+  }
+  muted=!muted;
+};
+</script>
+
+<script>
+/* Floating Hearts */
+for(let i=0;i<30;i++){
+  const h=document.createElement("div");
+  h.className="heart";
+  h.style.left=Math.random()*100+"vw";
+  h.style.animationDelay=Math.random()*5+"s";
+  h.style.animationDuration=4+Math.random()*4+"s";
+  document.body.appendChild(h);
+}
+</script>
+
+<script>
+const pagesData=[
+ "Welcome to Ardhangini ji 💞🎀",
+ "This story is only about us",
+ "From the first smile",
+ "To the first conversation",
+ "Every moment felt magical",
+ "Your laugh became my favorite sound",
+ "Your presence became my peace",
+ "Every day with you feels special",
+ "Even silence feels beautiful",
+ "Because you are there",
+ "Love grew quietly",
+ "But deeply",
+ "Like stars in the night",
+ "Like warmth in winters",
+ "You changed my world",
+ "Without even trying",
+ "You became my habit",
+ "My comfort",
+ "Will you be mine forever? 💍"
+];
+
+let current=0;
+const container=document.getElementById("container");
+
+pagesData.forEach((text,i)=>{
+  const d=document.createElement("div");
+  d.className="scene"+(i===0?" active":"");
+
+  if(i===pagesData.length-1){
+    d.innerHTML=`
+      <div class="quote">${text}</div>
+      <div>
+        <button id="yesBtn" onclick="accepted()">YES 💖</button>
+        <button id="noBtn">NO 😜</button>
+      </div>
+    `;
+  }else{
+    d.innerHTML=`
+      <div class="quote">“${text}”</div>
+      <div class="controls">
+        <button onclick="prev()">⟵ Previous</button>
+        <button onclick="next()">Next ⟶</button>
+      </div>
+    `;
+  }
+  container.appendChild(d);
+});
+
+function next(){
+  const s=document.querySelectorAll(".scene");
+  if(current<s.length-1){
+    s[current].classList.remove("active");
+    current++;
+    s[current].classList.add("active");
+    blast();
+  }
+}
+function prev(){
+  const s=document.querySelectorAll(".scene");
+  if(current>0){
+    s[current].classList.remove("active");
+    current--;
+    s[current].classList.add("active");
+    blast();
+  }
+}
+
+/* Runaway NO button */
+document.addEventListener("mouseover",function(e){
+  if(e.target.id==="noBtn"){
+    const btn=e.target;
+    btn.style.left=Math.random()*(window.innerWidth-100)+"px";
+    btn.style.top=Math.random()*(window.innerHeight-50)+"px";
+  }
+});
+
+/* YES click */
+function accepted(){
+  alert("Yayyyy 💞 Forever begins now!");
+  blast();
+}
+
+/* Fireworks */
+const c=document.getElementById("fireworks");
+const ctx=c.getContext("2d");
+c.width=innerWidth;c.height=innerHeight;
+window.onresize=()=>{c.width=innerWidth;c.height=innerHeight};
+
+let particles=[];
+function blast(){
+  for(let i=0;i<40;i++){
+    particles.push({
+      x:Math.random()*c.width,
+      y:Math.random()*c.height/2,
+      vx:(Math.random()-0.5)*6,
+      vy:(Math.random()-0.5)*6,
+      life:80
+    });
+  }
+}
+(function animate(){
+  ctx.clearRect(0,0,c.width,c.height);
+  particles.forEach((p,i)=>{
+    ctx.fillStyle=`rgba(255,0,80,${p.life/80})`;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,3,0,Math.PI*2);
+    ctx.fill();
+    p.x+=p.vx;p.y+=p.vy;p.life--;
+    if(p.life<=0)particles.splice(i,1);
+  });
+  requestAnimationFrame(animate);
+})();
+</script>
+
+</body>
+</html>
